@@ -33,6 +33,20 @@
     .error{color:#dc2626;font-size:14px;margin-top:10px;text-align:center;display:none}
     .learn-box{margin-top:20px;padding:10px 16px 20px 16px;border:1px solid #cbd5e1;border-radius:10px;background:#f0f0ff;text-align:center}
     .learn-box a{display:inline-block;margin-top:10px;padding:12px 20px;border-radius:8px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;text-decoration:none;font-weight:600}
+    .twl-wrap .scale {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+/* On small screens, stack them 2 per row */
+@media (max-width: 480px) {
+  .twl-wrap .scale {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
   </style>
 </head>
 <body>
