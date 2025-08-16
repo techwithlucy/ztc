@@ -5,48 +5,68 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Cloud Role Quiz — Single File App</title>
   <style>
-    body{margin:0;background:#eef0fa;color:#1e293b;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";}
+    /* Page + typography */
+    html, body { height: auto; min-height: 100vh; }
+    body{
+      margin:0; background:#eef0fa; color:#1e293b;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+      line-height:1.4; overflow:auto;
+    }
     .wrap{max-width:900px;margin:0 auto;padding:20px}
     header{display:flex;align-items:center;margin-bottom:20px}
     .logo{font-size:28px;margin-right:8px}
     .brand{display:flex;align-items:center;gap:8px}
-    .card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 2px 6px rgba(0,0,0,.1);margin-bottom:20px}
+
+    /* Cards */
+    .card{
+      background:#fff;border-radius:12px;padding:20px;
+      box-shadow:0 2px 6px rgba(0,0,0,.1);margin-bottom:20px
+    }
+
+    /* Hero */
     .emoji-preview{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
     .emoji-preview span{background:#f6f6fb;padding:6px 10px;border-radius:20px;font-size:14px}
-    .progress{display:flex;align-items:center;margin-top:10px}
+
+    /* Progress */
+    .progress{display:flex;align-items:center;margin-top:10px;gap:8px}
     .bar{flex:1;height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden}
     .bar span{display:block;height:100%;background:linear-gradient(90deg,#4f46e5,#6366f1);width:0}
-    .muted{font-size:14px;color:#64748b;margin-left:8px}
+    .muted{font-size:14px;color:#64748b}
+
+    /* Quiz */
     .q{margin:16px 0;padding:14px;border:1px solid #cbd5e1;border-radius:10px;background:#f6f6fb}
     .scale{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}
     .opt input{position:absolute;opacity:0;width:0;height:0}
-    .opt label{display:block;padding:8px;border:1px solid #cbd5e1;border-radius:8px;text-align:center;cursor:pointer;font-size:14px;color:#64748b;user-select:none}
-    .opt input:checked+label{border-color:#4f46e5;background:rgba(99,102,241,.1);color:#1e293b}
-    .actions{display:flex;justify-content:center;gap:12px;margin-top:20px}
-    .btn{padding:10px 16px;border-radius:8px;border:1px solid #cbd5e1;cursor:pointer;font-weight:600}
+    .opt label{
+      display:block;padding:10px;border:1px solid #cbd5e1;border-radius:8px;
+      text-align:center;cursor:pointer;font-size:14px;color:#334155;background:#fff;user-select:none
+    }
+    .opt input:checked+label{border-color:#4f46e5;background:rgba(99,102,241,.1);color:#1e293b;font-weight:600}
+
+    /* Actions */
+    .actions{display:flex;justify-content:center;gap:12px;margin-top:20px;flex-wrap:wrap}
+    .btn{padding:10px 16px;border-radius:8px;border:1px solid #cbd5e1;cursor:pointer;font-weight:600;background:#fff}
     .btn.primary{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none}
+    .btn:focus{outline:2px solid #6366f1;outline-offset:2px}
+
+    /* Results */
     .results{display:none}
     .role{padding:12px;border:1px solid #cbd5e1;border-radius:10px;margin:10px 0;background:#f6f6fb}
     .meter{height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-top:6px}
     .meter span{display:block;height:100%;background:linear-gradient(90deg,#16a34a,#6366f1);width:0}
     .role .match{margin-top:6px;font-weight:500}
     .error{color:#dc2626;font-size:14px;margin-top:10px;text-align:center;display:none}
+
     .learn-box{margin-top:20px;padding:10px 16px 20px 16px;border:1px solid #cbd5e1;border-radius:10px;background:#f0f0ff;text-align:center}
     .learn-box a{display:inline-block;margin-top:10px;padding:12px 20px;border-radius:8px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;text-decoration:none;font-weight:600}
-    .twl-wrap .scale {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-top: 8px;
+
+    /* Mobile tweaks */
+    @media (max-width: 480px) {
+      .wrap{padding:16px}
+      .scale{grid-template-columns:repeat(2,1fr)}
+      .opt label{font-size:13px;padding:10px 8px}
+      .emoji-preview span{font-size:13px}
     }
-
-/* On small screens, stack them 2 per row */
-@media (max-width: 480px) {
-  .twl-wrap .scale {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
   </style>
 </head>
 <body>
@@ -56,25 +76,29 @@
     </header>
 
     <div class="card hero">
-      <h2>Want to find the right cloud role for you?</h2>
-      <p>Answer 15 quick questions. At the end, you’ll see your top 3 matching cloud roles with descriptions.</p>
+      <h2>Find the cloud role that suits you</h2>
+      <p>Answer 15 quick questions. You’ll get your top 3 matches with short descriptions.</p>
       <div class="emoji-preview">
-        <span>🧑‍💻 Solutions Architect</span>
-        <span>🧑‍🔧 Cloud Engineer</span>
-        <span>🙋‍♀️ Cloud Support Engineer</span>
-        <span>🧑‍💼 Security Engineer</span>
-        <span>👩‍💻 DevOps Engineer</span>
-        <span>👩‍🏫 Data Engineer</span>
-        <span>👩‍🔬 AI / ML Engineer</span>
-        <span>👷‍♀️ Cloud Architect</span>
+        <span>Solutions Architect</span>
+        <span>Cloud Engineer</span>
+        <span>Cloud Support Engineer</span>
+        <span>Security Engineer</span>
+        <span>DevOps Engineer</span>
+        <span>Data Engineer</span>
+        <span>AI / ML Engineer</span>
+        <span>Cloud Architect</span>
       </div>
-      <div class="progress"><div class="bar"><span id="progress-bar"></span></div><div class="muted" id="progress-text">0 / 15</div></div>
+      <div class="progress">
+        <div class="bar"><span id="progress-bar"></span></div>
+        <div class="muted" id="progress-text">0 / 15</div>
+      </div>
     </div>
 
     <div class="card quiz" id="quiz">
-      <!-- Questions will be injected here -->
+      <!-- Questions inject here -->
       <div class="actions">
         <button id="btn-submit" class="btn primary">Submit Quiz</button>
+        <button id="btn-reset" class="btn" title="Clear all answers">Reset</button>
       </div>
       <div class="error" id="error-msg">Please answer all questions before submitting.</div>
     </div>
@@ -87,146 +111,164 @@
       </div>
       <div class="learn-box">
         <h3>Ready to start learning cloud?</h3>
-        <a href="https://www.zerotocloud.co/" target="_blank">👉 Zero To Cloud Courses</a>
+        <a href="https://www.zerotocloud.co/" target="_blank" rel="noopener">Zero To Cloud Courses</a>
       </div>
     </div>
   </div>
 
   <script>
-// (JS logic unchanged)
-const QUESTIONS = [
-  {t:"I enjoy meeting customers or stakeholders to understand goals.", dims:{CF:1}},
-  {t:"I like explaining technical trade-offs to non-technical people.", dims:{CF:1}},
-  {t:"I like writing code or scripts to automate tasks.", dims:{CODE:1}},
-  {t:"I want to manage infrastructure with code (Terraform, CDK, etc.).", dims:{CODE:1}},
-  {t:"I like diagnosing outages and performance issues.", dims:{OPS:1}},
-  {t:"I’m okay with on-call or time-sensitive troubleshooting.", dims:{OPS:1}},
-  {t:"I’m interested in identity, policies, and securing systems.", dims:{SEC:1}},
-  {t:"Compliance and guardrails sound interesting to me.", dims:{SEC:1}},
-  {t:"Working with datasets and SQL sounds fun.", dims:{DATA:1}},
-  {t:"I like designing pipelines to move and transform data.", dims:{DATA:1}},
-  {t:"I want to build with ML/AI services or frameworks.", dims:{ML:1}},
-  {t:"I’m curious about deploying and monitoring ML models.", dims:{ML:1}},
-  {t:"I like automating deployments and CI/CD pipelines.", dims:{DEVOPS:1}},
-  {t:"I enjoy high-level system design and trade-offs.", dims:{ARCH:1}},
-  {t:"I like drawing architectures before building.", dims:{ARCH:1}}
-];
-const ANSWERS = [
-  {label:"Not my thing", score:0},
-  {label:"Neutral", score:1},
-  {label:"Like it", score:2},
-  {label:"Love it", score:3}
-];
+    // Questions + scoring
+    const QUESTIONS = [
+      {t:"I enjoy meeting customers or stakeholders to understand goals.", dims:{CF:1}},
+      {t:"I like explaining technical trade-offs to non-technical people.", dims:{CF:1}},
+      {t:"I like writing code or scripts to automate tasks.", dims:{CODE:1}},
+      {t:"I want to manage infrastructure with code (Terraform, CDK, etc.).", dims:{CODE:1}},
+      {t:"I like diagnosing outages and performance issues.", dims:{OPS:1}},
+      {t:"I’m okay with on-call or time-sensitive troubleshooting.", dims:{OPS:1}},
+      {t:"I’m interested in identity, policies, and securing systems.", dims:{SEC:1}},
+      {t:"Compliance and guardrails sound interesting to me.", dims:{SEC:1}},
+      {t:"Working with datasets and SQL sounds fun.", dims:{DATA:1}},
+      {t:"I like designing pipelines to move and transform data.", dims:{DATA:1}},
+      {t:"I want to build with ML/AI services or frameworks.", dims:{ML:1}},
+      {t:"I’m curious about deploying and monitoring ML models.", dims:{ML:1}},
+      {t:"I like automating deployments and CI/CD pipelines.", dims:{DEVOPS:1}},
+      {t:"I enjoy high-level system design and trade-offs.", dims:{ARCH:1}},
+      {t:"I like drawing architectures before building.", dims:{ARCH:1}}
+    ];
+    const ANSWERS = [
+      {label:"Not my thing", score:0},
+      {label:"Neutral", score:1},
+      {label:"Like it", score:2},
+      {label:"Love it", score:3}
+    ];
+    const ROLES = {
+      "Solutions Architect": {dims:{CF:2,ARCH:3}, desc:"Designs end-to-end solutions and communicates with stakeholders."},
+      "Cloud Engineer": {dims:{CODE:2,OPS:2}, desc:"Builds and manages cloud infrastructure and automation."},
+      "Cloud Support Engineer": {dims:{OPS:3,CF:1}, desc:"Supports customers in troubleshooting and issue resolution."},
+      "Security Engineer": {dims:{SEC:3,OPS:1}, desc:"Secures cloud systems and ensures compliance."},
+      "DevOps Engineer": {dims:{DEVOPS:3,CODE:2}, desc:"Automates deployments and manages CI/CD pipelines."},
+      "Data Engineer": {dims:{DATA:3,CODE:1}, desc:"Builds and optimizes data pipelines and transformations."},
+      "AI / ML Engineer": {dims:{ML:3,DATA:1}, desc:"Develops and deploys ML models and AI solutions."},
+      "Cloud Architect": {dims:{ARCH:3,CF:1}, desc:"Creates high-level cloud architectures and roadmaps."}
+    };
 
-const ROLES = {
-  "Solutions Architect": {dims:{CF:2,ARCH:3}, desc:"Designs end-to-end solutions and communicates with stakeholders."},
-  "Cloud Engineer": {dims:{CODE:2,OPS:2}, desc:"Builds and manages cloud infrastructure and automation."},
-  "Cloud Support Engineer": {dims:{OPS:3,CF:1}, desc:"Supports customers in troubleshooting and issue resolution."},
-  "Security Engineer": {dims:{SEC:3,OPS:1}, desc:"Secures cloud systems and ensures compliance."},
-  "DevOps Engineer": {dims:{DEVOPS:3,CODE:2}, desc:"Automates deployments and manages CI/CD pipelines."},
-  "Data Engineer": {dims:{DATA:3,CODE:1}, desc:"Builds and optimizes data pipelines and transformations."},
-  "AI / ML Engineer": {dims:{ML:3,DATA:1}, desc:"Develops and deploys ML models and AI solutions."},
-  "Cloud Architect": {dims:{ARCH:3,CF:1}, desc:"Creates high-level cloud architectures and roadmaps."}
-};
+    // State
+    let state = { responses: Array(QUESTIONS.length).fill(null) };
 
-let state = {responses:Array(QUESTIONS.length).fill(null)};
-const quizEl=document.getElementById('quiz');
-const actionsEl=quizEl.querySelector('.actions');
-const progressBar=document.getElementById('progress-bar');
-const progressText=document.getElementById('progress-text');
-const resultsEl=document.getElementById('results');
-const errorMsg=document.getElementById('error-msg');
+    // DOM
+    const quizEl = document.getElementById('quiz');
+    const actionsEl = quizEl.querySelector('.actions');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+    const resultsEl = document.getElementById('results');
+    const errorMsg = document.getElementById('error-msg');
 
-function renderQuiz(){
-  [...quizEl.querySelectorAll('.q')].forEach(node=>node.remove());
-  QUESTIONS.forEach((q,qi)=>{
-    const qDiv=document.createElement('div'); qDiv.className='q';
-    const h=document.createElement('h3'); h.textContent=`Q${qi+1}. ${q.t}`; qDiv.appendChild(h);
-    const scale=document.createElement('div'); scale.className='scale';
-    ANSWERS.forEach((a,ai)=>{
-      const opt=document.createElement('div'); opt.className='opt';
-      const inp=document.createElement('input'); inp.type='radio'; inp.name=`q${qi}`; inp.value=ai; inp.id=`q${qi}_a${ai}`;
-      if(state.responses[qi]===ai) inp.checked=true;
-      inp.addEventListener('change',()=>{state.responses[qi]=ai; renderProgress();});
-      const lab=document.createElement('label'); lab.htmlFor=inp.id; lab.textContent=a.label;
-      opt.appendChild(inp); opt.appendChild(lab);
-      scale.appendChild(opt);
+    // Render quiz
+    function renderQuiz(){
+      [...quizEl.querySelectorAll('.q')].forEach(n=>n.remove());
+      QUESTIONS.forEach((q,qi)=>{
+        const qDiv = document.createElement('div'); qDiv.className='q';
+        const h = document.createElement('h3'); h.textContent=`Q${qi+1}. ${q.t}`; qDiv.appendChild(h);
+
+        const scale = document.createElement('div'); scale.className='scale';
+        ANSWERS.forEach((a,ai)=>{
+          const opt = document.createElement('div'); opt.className='opt';
+          const inp = document.createElement('input');
+          inp.type='radio'; inp.name=`q${qi}`; inp.value=ai; inp.id=`q${qi}_a${ai}`;
+          if(state.responses[qi]===ai) inp.checked=true;
+          inp.addEventListener('change',()=>{ state.responses[qi]=ai; renderProgress(); });
+          const lab=document.createElement('label'); lab.htmlFor=inp.id; lab.textContent=a.label;
+          opt.appendChild(inp); opt.appendChild(lab);
+          scale.appendChild(opt);
+        });
+        qDiv.appendChild(scale);
+        quizEl.insertBefore(qDiv, actionsEl);
+      });
+      renderProgress();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderProgress(){
+      const done = state.responses.filter(v=>v!==null).length;
+      const total = QUESTIONS.length;
+      progressText.textContent = `${done} / ${total}`;
+      progressBar.style.width = `${(done/total)*100}%`;
+    }
+
+    // Compute + show results
+    function computeResults(){
+      const dimScores={CF:0,CODE:0,OPS:0,SEC:0,DATA:0,ML:0,DEVOPS:0,ARCH:0};
+      const dimMax={};
+      QUESTIONS.forEach(q=>{
+        for(const d in q.dims){ dimMax[d]=(dimMax[d]||0)+3*q.dims[d]; }
+      });
+      Object.keys(dimScores).forEach(d=>{ if(!(d in dimMax)) dimMax[d]=0; });
+
+      QUESTIONS.forEach((q,qi)=>{
+        const ans = state.responses[qi];
+        if(ans!==null){
+          const score = ANSWERS[ans].score;
+          for(const d in q.dims){ dimScores[d]+=score*q.dims[d]; }
+        }
+      });
+
+      const results=[];
+      for(const role in ROLES){
+        let acc=0, denom=0;
+        const weights=ROLES[role].dims;
+        for(const d in weights){
+          const w=weights[d];
+          acc+=(dimScores[d]||0)*w;
+          denom+=(dimMax[d]||0)*w;
+        }
+        const pct = denom>0 ? Math.min(100, Math.round((acc/denom)*100)) : 0;
+        results.push({role, score:pct, desc:ROLES[role].desc});
+      }
+      results.sort((a,b)=>b.score-a.score);
+      return results.slice(0,3);
+    }
+
+    function showResults(){
+      const res=computeResults();
+      const top=document.getElementById('topRoles');
+      top.innerHTML='';
+      res.forEach(r=>{
+        const div=document.createElement('div'); div.className='role';
+        div.innerHTML=`<strong>${r.role}</strong>
+          <div class="match">${r.score}% match</div>
+          <p>${r.desc}</p>
+          <div class="meter"><span style="width:${r.score}%"></span></div>`;
+        top.appendChild(div);
+      });
+      quizEl.style.display='none';
+      resultsEl.style.display='block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Events
+    document.getElementById('btn-submit').addEventListener('click',()=>{
+      if(state.responses.includes(null)){
+        errorMsg.style.display='block';
+      } else {
+        errorMsg.style.display='none';
+        showResults();
+      }
     });
-    qDiv.appendChild(scale);
-    quizEl.insertBefore(qDiv, actionsEl);
-  });
-  renderProgress();
-}
 
-function renderProgress(){
-  const done=state.responses.filter(v=>v!==null).length;
-  const total=QUESTIONS.length;
-  progressText.textContent=`${done} / ${total}`;
-  progressBar.style.width=`${(done/total)*100}%`;
-}
+    document.getElementById('btn-reset').addEventListener('click',()=>{
+      state.responses = Array(QUESTIONS.length).fill(null);
+      errorMsg.style.display='none';
+      renderQuiz();
+    });
 
-function computeResults(){
-  const dimScores={CF:0,CODE:0,OPS:0,SEC:0,DATA:0,ML:0,DEVOPS:0,ARCH:0};
-  const dimMax={};
-  QUESTIONS.forEach((q)=>{
-    for(const d in q.dims){
-      dimMax[d]=(dimMax[d]||0)+3*q.dims[d];
-    }
-  });
-  Object.keys(dimScores).forEach(d=>{if(!(d in dimMax)) dimMax[d]=0});
-  QUESTIONS.forEach((q,qi)=>{
-    const ans=state.responses[qi];
-    if(ans!==null){
-      const score=ANSWERS[ans].score;
-      for(const d in q.dims){dimScores[d]+=score*q.dims[d];}
-    }
-  });
-  const results=[];
-  for(const role in ROLES){
-    let acc=0,denom=0;
-    const weights=ROLES[role].dims;
-    for(const d in weights){
-      const w=weights[d];
-      acc+=(dimScores[d]||0)*w;
-      denom+=(dimMax[d]||0)*w;
-    }
-    const pct=denom>0?Math.min(100,Math.round((acc/denom)*100)):0;
-    results.push({role,score:pct,desc:ROLES[role].desc});
-  }
-  results.sort((a,b)=>b.score-a.score);
-  return results.slice(0,3);
-}
+    document.getElementById('btn-startover').addEventListener('click',()=>{
+      state.responses = Array(QUESTIONS.length).fill(null);
+      resultsEl.style.display='none';
+      quizEl.style.display='block';
+      renderQuiz();
+    });
 
-function showResults(){
-  const res=computeResults();
-  const top=document.getElementById('topRoles');
-  top.innerHTML='';
-  res.forEach(r=>{
-    const div=document.createElement('div'); div.className='role';
-    div.innerHTML=`<strong>${r.role}</strong><div class="match">${r.score}% match</div><p>${r.desc}</p><div class="meter"><span style="width:${r.score}%"></span></div>`;
-    top.appendChild(div);
-  });
-  quizEl.style.display='none';
-  resultsEl.style.display='block';
-}
-
-document.getElementById('btn-submit').addEventListener('click',()=>{
-  if(state.responses.includes(null)){
-    errorMsg.style.display='block';
-  } else {
-    errorMsg.style.display='none';
-    showResults();
-  }
-});
-
-document.getElementById('btn-startover').addEventListener('click',()=>{
-  state.responses=Array(QUESTIONS.length).fill(null);
-  resultsEl.style.display='none';
-  quizEl.style.display='block';
-  renderQuiz();
-});
-
-renderQuiz();
+    renderQuiz();
   </script>
 </body>
 </html>
